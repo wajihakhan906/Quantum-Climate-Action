@@ -56,7 +56,7 @@ def main():
             print(f"  {f:13s} RMSE {s['rmse']:.3f}  MAE {s['mae']:.3f}  R2 {s['r2']:.3f}")
 
     (ROOT / "Results" / "results_qml.json").write_text(json.dumps({"config": vars(args), "results": results}, indent=2))
-    np.savez(ROOT / "Results" / "predictions_qml.npz", dates=test_df["date"].astype(str).to_numpy(), y=y_true,
+    np.savez(ROOT / "Results" / "predictions_qml.npz", dates=test_df["date"].dt.strftime("%Y-%m-%d").to_numpy(dtype="U10"), y=y_true,
              **{("SVR_pca" if "PCA" in k else k.split(" ")[0]): v for k, v in preds.items()})
 
 

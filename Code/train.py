@@ -89,7 +89,7 @@ def main():
 
     (ROOT / "Results").mkdir(exist_ok=True)
     (ROOT / "Results" / "results.json").write_text(json.dumps({"config": vars(args), "results": results}, indent=2))
-    np.savez(ROOT / "Results" / "predictions.npz", dates=test_df["date"].astype(str).to_numpy(), y=y, **preds)
+    np.savez(ROOT / "Results" / "predictions.npz", dates=test_df["date"].dt.strftime("%Y-%m-%d").to_numpy(dtype="U10"), y=y, **preds)
 
 
 if __name__ == "__main__":

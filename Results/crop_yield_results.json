@@ -1,0 +1,55 @@
+{
+  "config": {
+    "qubits": 4,
+    "qnnr_layers": 4,
+    "qnnr_epochs": 30,
+    "vqr_train": 2000,
+    "vqr_maxiter": 150,
+    "test_size": 0.1,
+    "seed": 42
+  },
+  "n_train": 25417,
+  "n_test": 2825,
+  "results": {
+    "QNNR": {
+      "train_seconds": 176.67,
+      "test_seconds": 10.51,
+      "train_r2": 0.6758111206434108,
+      "train_rmse": 48348.515365904015,
+      "test_r2": 0.6707292246708012,
+      "test_rmse": 48951.33203957406
+    },
+    "VQR": {
+      "train_seconds": 481.89,
+      "test_seconds": 44.3,
+      "train_r2": -0.10308415209435151,
+      "train_rmse": 89184.30017412259,
+      "test_r2": -0.06969758494725231,
+      "test_rmse": 88230.43666358615
+    },
+    "Classical SVR": {
+      "train_seconds": 36.95,
+      "test_seconds": 15.03,
+      "train_r2": 0.8572329895631806,
+      "train_rmse": 32084.70266077897,
+      "test_r2": 0.854171783653302,
+      "test_rmse": 32576.821102712333
+    },
+    "Linear Regressor": {
+      "train_seconds": 0.0,
+      "test_seconds": 0.0,
+      "train_r2": 0.7276106832114009,
+      "train_rmse": 44317.894712036665,
+      "test_r2": 0.7274467853980449,
+      "test_rmse": 44536.24272956832
+    },
+    "Neural Network Regressor": {
+      "train_seconds": 10.99,
+      "test_seconds": 0.1,
+      "train_r2": 0.9326348071457816,
+      "train_rmse": 22039.50645766804,
+      "test_r2": 0.9298280747636277,
+      "test_rmse": 22597.979844692883
+    }
+  }
+}

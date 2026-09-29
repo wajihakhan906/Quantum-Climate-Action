@@ -77,7 +77,13 @@ python plot_results.py
 ```
 
 ## Results
-See [Results/README.md](Results/README.md).
+Test R² on the 114-day weather test period (full tables in [Results/README.md](Results/README.md)):
+
+![Test predictions](Figures/test_predictions.png)
+
+- **QLSTM ≈ CLSTM with ~15× fewer parameters** (344 vs 4,996): it beats CLSTM on humidity and pressure.
+- **QSVR / QNNR ≈ classical SVR on the same 4 qubit inputs**; the full-window classical SVR is best overall.
+- **Crop yield**: QNNR test R² 0.67 with a log-scaled target (vs −3.95 with raw yields).
 
 ## Author
 **Wajiha Rahim Khan**  
