@@ -1,9 +1,14 @@
 # Quantum Climate Action
 
-Quantum and hybrid quantum–classical models for **climate time-series forecasting**, benchmarked against classical
-models on the **Daily Delhi Climate** dataset (2013–2017): mean temperature, humidity, wind speed and mean pressure.
+Quantum and hybrid quantum–classical machine learning for climate action, benchmarked against classical models on two tasks:
 
-## Models
+1. **Weather forecasting**: Daily Delhi Climate (2013–2017): mean temperature, humidity, wind speed, mean pressure.
+2. **Crop-yield estimation**: Crop Yield Prediction dataset (FAO / World Bank, 101 countries, 10 crops): yield in hg/ha
+   from rainfall, pesticides, temperature, crop and country.
+
+![CLSTM vs QLSTM on the Delhi climate data](Figures/original/clstm_vs_qlstm_delhi.png)
+
+## Part 1: Weather Forecasting Models
 | Model | Type | Input | Idea |
 |---|---|---|---|
 | **CLSTM** | classical | 7-day window | standard LSTM, 32 hidden units |
@@ -24,6 +29,20 @@ on every qubit (Chen et al., *Quantum Long Short-Term Memory*, 2020).
 The VQC is simulated exactly in PyTorch (`quantum_layer.py`), so QLSTM trains with ordinary back-propagation. The
 simulator is tested against Qiskit's statevector, and `VQCLayer.to_qiskit()` exports the same circuit for IBM hardware.
 
+## Part 2: Crop-Yield Estimation
+| Model | Type |
+|---|---|
+| **QNNR** | hybrid: angle-encoded VQC (⟨Z<sub>i</sub>⟩ readout) + linear layer, trained with Adam |
+| **VQR** | pure quantum: ZZ feature map + RealAmplitudes, prediction ∝ ⟨Z…Z⟩, trained with COBYLA |
+| Classical SVR, Linear Regressor, Neural Network Regressor | classical baselines |
+
+Inputs: crop and country target encodings (fitted on the training split only), temperature, log rainfall,
+log pesticides and year, compressed with PCA to one input per qubit for the quantum models. The target is
+log-yield, standardised, so the quantum models' bounded outputs cover the full yield range; metrics are
+reported in hg/ha. Split: 90 % train (25,417 rows) / 10 % test (2,825 rows).
+
+![Original crop-yield results](Figures/original/crop_yield_qnnr_vqr.png)
+
 ## Repository Structure
 ```
 Quantum-Climate-Action/
@@ -34,11 +53,13 @@ Quantum-Climate-Action/
 │   ├── qml_regressors.py    # QSVR, QNNR, classical SVR baselines
 │   ├── train.py             # CLSTM vs QLSTM
 │   ├── train_qml.py         # QSVR, QNNR, SVR
+│   ├── crop_yield.py        # QNNR, VQR vs SVR / linear / MLP on crop yield
 │   ├── plot_results.py      # all figures
 │   ├── tests/               # simulator vs Qiskit, kernel validity, QNNR learning
 │   └── requirements.txt
-├── Dataset/                 # DailyDelhiClimateTrain.csv, DailyDelhiClimateTest.csv
+├── Dataset/                 # Delhi climate train/test CSVs, yield_df.csv
 ├── Figures/                 # dataset, predictions, RMSE comparison, VQC circuit
+│   └── original/            # original project figures (CLSTM/QLSTM, crop-yield QNNR/VQR)
 ├── Results/                 # metrics JSON, predictions
 ├── LICENSE
 └── README.md
@@ -51,6 +72,7 @@ pip install -r requirements.txt
 python -m pytest tests
 python train.py          # CLSTM vs QLSTM
 python train_qml.py      # QSVR, QNNR, SVR
+python crop_yield.py     # crop-yield QNNR, VQR and baselines
 python plot_results.py
 ```
 
