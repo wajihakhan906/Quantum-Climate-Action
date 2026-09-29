@@ -71,3 +71,30 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def plot_crop_yield():
+    path = ROOT / "Results" / "crop_yield_results.json"
+    if not path.exists():
+        return
+    res = json.load(open(path))["results"]
+    p = np.load(ROOT / "Results" / "crop_yield_predictions.npz")
+    names = list(res)
+    fig, (a, b) = plt.subplots(1, 2, figsize=(13, 4.2), gridspec_kw={"width_ratios": [1, 1.6]})
+    colors = ["#C44E52", "#8172B2", "#999999", "#BBBBBB", "#4C72B0"]
+    bars = a.bar(range(len(names)), [res[n]["test_r2"] for n in names], color=colors)
+    a.bar_label(bars, fmt="%.2f", fontsize=8)
+    a.axhline(0, color="k", lw=0.8)
+    a.set_xticks(range(len(names))); a.set_xticklabels(names, rotation=25, ha="right", fontsize=8)
+    a.set_ylabel("Test R²"); a.set_title("Crop-yield estimation (test R²)")
+    idx = np.arange(100)
+    b.plot(idx, p["y"][idx], "ko--", ms=3, lw=0.8, label="Actual")
+    for n, c in (("QNNR", "#C44E52"), ("VQR", "#8172B2"), ("Neural_Network_Regressor", "#4C72B0")):
+        b.plot(idx, p[n][idx], color=c, lw=1, label=n.replace("_", " "))
+    b.set_xlabel("test sample"); b.set_ylabel("yield (hg/ha)"); b.set_title("Actual vs predicted (first 100 test samples)")
+    b.legend(fontsize=8)
+    fig.tight_layout(); fig.savefig(ROOT / "Figures" / "crop_yield_results.png", dpi=200)
+
+
+if __name__ == "__main__":
+    plot_crop_yield()
