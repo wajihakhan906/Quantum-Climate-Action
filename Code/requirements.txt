@@ -1,0 +1,7 @@
+torch>=2.1
+numpy
+pandas
+matplotlib
+qiskit>=1.2        # circuit export / hardware runs
+pylatexenc
+pytest
